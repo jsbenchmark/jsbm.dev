@@ -1,0 +1,18 @@
+-- Migration number: 0000 	 2024-01-20T01:25:05.928Z
+create table if not exists shortcode (
+	code text primary key,
+	mode int not null default 0,
+	data text not null
+);
+insert into shortcode(code, mode, data)
+values (
+		'default',
+		0,
+		'eyJjYXNlcyI6W3siaWQiOiJiVUcyakppSGpVbkhiRGY2dHE5Y2IiLCJjb2RlIjoiREFUQS5maW5kKGkgPT4gaSA9PT0gOTkpIiwibmFtZSI6IkZpbmQgOTkifSx7ImlkIjoiQTduN01naEsxT0k4UzMzUE1WTWJWIiwiY29kZSI6IkRBVEEuZmluZChpID0+IGkgPT09IDQ5OSkiLCJuYW1lIjoiRmluZCA0OTkifSx7ImlkIjoiVWZPaWhkWV9mQUdRUmlhY0s0dHh4IiwiY29kZSI6IkRBVEEuZmluZChpID0+IGkgPT09IDk5OSkiLCJuYW1lIjoiRmluZCA5OTkifV0sImNvbmZpZyI6eyJuYW1lIjoiQmFzaWMgZXhhbXBsZSIsInBhcmFsbGVsIjp0cnVlLCJnbG9iYWxUZXN0Q29uZmlnIjp7ImRlcGVuZGVuY2llcyI6W119LCJkYXRhQ29kZSI6InJldHVybiBbLi4uQXJyYXkoMTAwMCkua2V5cygpXSJ9fQ=='
+	);
+insert into shortcode(code, mode, data)
+values (
+		'default-repl',
+		1,
+		'eyJjb25maWciOnsibmFtZSI6IkJhc2ljIGV4YW1wbGUiLCJ0ZXN0Ijp7ImRlcGVuZGVuY2llcyI6W10sImNvZGUiOiJMT0coJ0hlbGxvIFdvcmxkIScsIHsgZm9vOiAnYmFyJyB9KVxuXG5USU1FKCdGaXJzdCcpXG5hd2FpdCBuZXcgUHJvbWlzZSgocikgPT4gc2V0VGltZW91dChyLCAxMDApKVxuVElNRSgnRmlyc3QnKVxuXG5USU1FKCdTZWNvbmQnKVxuYXdhaXQgbmV3IFByb21pc2UoKHIpID0+IHNldFRpbWVvdXQociwgMjUwKSlcblRJTUUoJ1NlY29uZCcpXG5cblRJTUUoJ0RvbmUhJykifX19'
+	);

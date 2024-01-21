@@ -1,0 +1,10 @@
+name = "jsbm-dev"
+main = "build/worker/shim.mjs"
+compatibility_date = "2022-10-20"
+
+[build]
+command = "cargo install -q worker-build --version 0.0.7 && worker-build --release"
+
+[vars]
+JSBENCHMARK_FQDN = "jsbenchmark.com"
+ENVIRONMENT = "production"

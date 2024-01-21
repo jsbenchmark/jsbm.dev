@@ -1,0 +1,6 @@
+.wrangler
+build
+node_modules
+target
+wrangler.toml
+.dev.vars
