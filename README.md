@@ -81,7 +81,7 @@ To get up-and-running in development, do the following:
 
 1. Setup Wrangler
 
-I use `Volta`(https://volta.sh) but `npm i -g` works just as well.
+I use [`Volta`](https://volta.sh) but `npm i -g` works just as well.
 
 ```bash
 $ volta install wrangler # or
@@ -114,25 +114,25 @@ Then, go to the SQL Editor tab and add the migrations in order from the `migrati
 
 Then, deconstruct the database URL into the following variables.
 You're gonna need this later.
-It might be a good idea to do this in `.dev.env` and comment out each line -- just so you have somewhere to copy and paste from.
+It might be a good idea to do this in `.dev.vars` and comment out each line -- just so you have somewhere to copy and paste from.
 
 ```config
-PG_USER = ""
-PG_PASSWORD = ""
-PG_HOST = ""
-PG_DATABASE = ""
+# PG_USER = ""
+# PG_PASSWORD = ""
+# PG_HOST = ""
+# PG_DATABASE = ""
 ```
 
 2. Deploy the worker
 
-```bash
+```console
 $ cp _wrangler.toml wrangler.toml # copy the example wrangler.toml
 $ wrangler login # login to Cloudflare
 $ wrangler deploy # deploy the worker
 # for each key and value of PG_*, run the following command
-$ wrangler secret put <key> # will open a prompt for the value
 # you can also do this on the Worker dashboard,
 # but remember to click Entrypt!
+$ wrangler secret put <key> # will open a prompt for the value
 ```
 
 3. Profit.
