@@ -4,3 +4,4 @@ node_modules
 target
 wrangler.toml
 .dev.vars
+dist

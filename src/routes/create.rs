@@ -37,7 +37,7 @@ pub async fn create_shortcode(mut req: Request, ctx: RouteContext<()>) -> worker
 
 	if let Err(err) = db
 		.execute(
-			"insert into shortcode(code, mode, data)",
+			"insert into shortcode(code, mode, data) values ($1, $2, $3);",
 			&[&code, &mode.as_i32(), &data],
 		)
 		.await
