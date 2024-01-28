@@ -13,6 +13,7 @@ pub struct BenchmarkCase {
 	pub id: String,
 	pub code: String,
 	pub name: String,
+	pub dependencies: Option<Vec<Dependency>>,
 }
 
 /// The configuration for a Benchmark.
