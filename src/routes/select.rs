@@ -25,10 +25,10 @@ pub async fn select_shortcode(_: Request, ctx: RouteContext<()>) -> worker::Resu
 	let encoded_data: &str = result.get("data");
 	let mode: ShortlinkMode = result.get("mode");
 
-	let fqdn = ctx.env.var("JSBENCHMARK_FQDN")?.to_string();
+	let frontend_url = ctx.env.var("FRONTEND_URL")?.to_string();
 	let url = match mode {
-		ShortlinkMode::Benchmark => Url::parse(&format!("https://{fqdn}/#{}", encoded_data))?,
-		ShortlinkMode::Repl => Url::parse(&format!("https://{fqdn}/repl/#{}", encoded_data))?,
+		ShortlinkMode::Benchmark => Url::parse(&format!("{frontend_url}/#{}", encoded_data))?,
+		ShortlinkMode::Repl => Url::parse(&format!("{frontend_url}/repl/#{}", encoded_data))?,
 	};
 
 	Response::redirect(url)

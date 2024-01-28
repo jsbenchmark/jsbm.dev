@@ -6,5 +6,5 @@ compatibility_date = "2022-10-20"
 command = "cargo install -q worker-build --version 0.0.10 && worker-build --release"
 
 [vars]
-JSBENCHMARK_FQDN = "jsbenchmark.com"
+FRONTEND_URL = "https://jsbenchmark.com"
 ENVIRONMENT = "production"
