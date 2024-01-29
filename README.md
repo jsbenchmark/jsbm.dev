@@ -90,12 +90,15 @@ $ npm i -g wrangler
 
 Then, run `wrangler login` and follow the instructions.
 
-2. Clone `.dev.vars` and `wrangler.toml`
+1. Clone `.dev.vars`
 
-Both example files are provided, prefixed with an underscore.
-Duplicate both files and remove the underscore.
+The example file is prefixed with an underscore.
 
-3. Start postgres (and pgbouncer)
+```sh
+$ cp _.dev.vars .dev.vars
+```
+
+1. Start postgres (and pgbouncer)
 
 Run `docker compose up --wait` to start postgres and pgbouncer.
 Pgbouncer is used to pool connections to the database, which is required for serverless.
@@ -126,7 +129,6 @@ It might be a good idea to do this in `.dev.vars` and comment out each line -- j
 2. Deploy the worker
 
 ```console
-$ cp _wrangler.toml wrangler.toml # copy the example wrangler.toml
 $ wrangler login # login to Cloudflare
 $ wrangler deploy # deploy the worker
 # for each key and value of PG_*, run the following command
