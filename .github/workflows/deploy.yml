@@ -15,4 +15,4 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: wrangler deploy --keep-vars
+          command: deploy --keep-vars
