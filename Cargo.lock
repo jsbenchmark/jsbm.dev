@@ -59,12 +59,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "base-encode"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a17bd29f7c70f32e9387f4d4acfa5ea7b7749ef784fb78cf382df97069337b8c"
-
-[[package]]
 name = "base64"
 version = "0.21.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -389,10 +383,10 @@ dependencies = [
  "console_error_panic_hook",
  "http 1.0.0",
  "indoc",
+ "rand",
  "serde",
  "serde_json",
  "serde_repr",
- "svix-ksuid",
  "time",
  "tokio-postgres",
  "wasm-bindgen",
@@ -864,18 +858,6 @@ name = "subtle"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "81cdd64d312baedb58e21336b31bc043b77e01cc99033ce76ef539f78e965ebc"
-
-[[package]]
-name = "svix-ksuid"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "66f014385b7fc154f59e9480770c2187b6e61037c2439895788a9a4d421d7859"
-dependencies = [
- "base-encode",
- "byteorder",
- "getrandom",
- "time",
-]
 
 [[package]]
 name = "syn"

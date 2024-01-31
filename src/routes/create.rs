@@ -2,8 +2,8 @@ use base64::engine::general_purpose::URL_SAFE;
 use base64::Engine as _;
 use http::StatusCode;
 use serde::{Deserialize, Serialize};
-use svix_ksuid::{KsuidLike, KsuidMs};
 use worker::*;
+use rand::distributions::{Alphanumeric, DistString};
 
 use crate::error::create_error_json;
 use crate::model::{create_database, ShortlinkMode};
@@ -14,6 +14,12 @@ use crate::ser::{BenchmarkState, ReplState};
 enum CreateShortcodeJsonBody {
 	Benchmark(BenchmarkState),
 	Repl(ReplState),
+}
+
+fn generate_code() -> String {
+	let string = Alphanumeric.sample_string(&mut rand::thread_rng(), 13);
+
+	string
 }
 
 pub async fn create_shortcode(mut req: Request, ctx: RouteContext<()>) -> worker::Result<Response> {
@@ -29,11 +35,29 @@ pub async fn create_shortcode(mut req: Request, ctx: RouteContext<()>) -> worker
 		CreateShortcodeJsonBody::Repl(_) => ShortlinkMode::Repl,
 	};
 
-	let code = KsuidMs::new(None, None).to_string();
 	let s = serde_json::to_vec(&body)?;
 	let data = URL_SAFE.encode(&s);
 
 	let db = create_database(&ctx.env).await?;
+
+	// Generate a unique shortcode.
+	let mut attempts = 0;
+	let max_attempts = 10;
+	let mut code = generate_code();
+
+	while let Ok(Some(_)) = db
+		.query_opt("select code from shortcode where code = $1", &[&code])
+		.await
+	{
+		code = generate_code();
+		attempts += 1;
+		if attempts >= max_attempts {
+			return create_error_json(
+				StatusCode::INTERNAL_SERVER_ERROR,
+				"Failed to generate unique shortcode",
+			);
+		}
+	}
 
 	if let Err(err) = db
 		.execute(
