@@ -38,6 +38,11 @@ pub async fn create_shortcode(mut req: Request, ctx: RouteContext<()>) -> worker
 	let s = serde_json::to_vec(&body)?;
 	let data = URL_SAFE.encode(&s);
 
+	// Limit data size to 100KB.
+	if data.bytes().len() > 100_000 {
+		return create_error_json(StatusCode::PAYLOAD_TOO_LARGE, "Payload too large");
+	}
+
 	let db = create_database(&ctx.env).await?;
 
 	// Generate a unique shortcode.
