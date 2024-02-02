@@ -8,6 +8,7 @@ script = '''
 [tasks.dev]
 command = "cargo"
 args = ["run"]
+env_files = ["./.env"]
 watch = true
 
 [tasks.lint]
