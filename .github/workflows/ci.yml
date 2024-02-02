@@ -21,6 +21,8 @@ jobs:
         uses: r7kamura/rust-problem-matchers@v1
 
       - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt,clippy
 
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2
