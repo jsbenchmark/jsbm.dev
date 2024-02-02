@@ -15,6 +15,7 @@ watch = true
 install_crate = "clippy"
 command = "cargo"
 args = [
+	"+nightly",
 	"clippy",
 	"--tests",
 	"--examples",
@@ -27,6 +28,7 @@ args = [
 install_crate = "clippy"
 command = "cargo"
 args = [
+	"+nightly",
 	"clippy",
 	"--tests",
 	"--examples",
@@ -41,7 +43,7 @@ args = [
 [tasks.format]
 install_crate = "rustfmt"
 command = "cargo"
-args = ["fmt", "--all"]
+args = ["+nightly", "fmt", "--all"]
 
 [tasks.fmt]
 alias = "format"
@@ -49,4 +51,4 @@ alias = "format"
 [tasks.format-ci]
 install_crate = "rustfmt"
 command = "cargo"
-args = ["fmt", "--all", "--", "--check"]
+args = ["+nightly", "fmt", "--all", "--", "--check"]
