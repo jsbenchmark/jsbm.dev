@@ -12,7 +12,7 @@ env_files = ["./.env"]
 watch = true
 
 [tasks.lint]
-install_crate = "clippy"
+install_crate = "clippy-nightly"
 command = "cargo"
 args = [
 	"+nightly",
@@ -25,7 +25,7 @@ args = [
 ]
 
 [tasks.lint-ci]
-install_crate = "clippy"
+install_crate = "clippy-nightly"
 command = "cargo"
 args = [
 	"+nightly",
@@ -41,7 +41,7 @@ args = [
 ]
 
 [tasks.format]
-install_crate = "rustfmt"
+install_crate = "rustfmt-nightly"
 command = "cargo"
 args = ["+nightly", "fmt", "--all"]
 
@@ -49,6 +49,6 @@ args = ["+nightly", "fmt", "--all"]
 alias = "format"
 
 [tasks.format-ci]
-install_crate = "rustfmt"
+install_crate = "rustfmt-nightly"
 command = "cargo"
 args = ["+nightly", "fmt", "--all", "--", "--check"]
