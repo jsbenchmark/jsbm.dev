@@ -29,10 +29,10 @@ jobs:
         uses: davidB/rust-cargo-make@v1
 
       - name: Run Formatter
-        run: cargo make format-ci
+        run: cargo +nightly fmt --all -- --check
 
       - name: Run Clippy
-        run: cargo make lint-ci
+        run: cargo +nightly clippy --tests --examples --all-targets --all-features --workspace -- -D warnings
 
       - name: Build
         run: cargo build --release

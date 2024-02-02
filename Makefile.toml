@@ -23,28 +23,9 @@ args = [
 	"--workspace",
 ]
 
-[tasks.lint-ci]
-command = "cargo"
-args = [
-	"+nightly",
-	"clippy",
-	"--tests",
-	"--examples",
-	"--all-targets",
-	"--all-features",
-	"--workspace",
-	"--",
-	"-D",
-	"warnings",
-]
-
 [tasks.format]
 command = "cargo"
 args = ["+nightly", "fmt", "--all"]
 
 [tasks.fmt]
 alias = "format"
-
-[tasks.format-ci]
-command = "cargo"
-args = ["+nightly", "fmt", "--all", "--", "--check"]
