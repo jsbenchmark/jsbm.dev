@@ -1,0 +1,11 @@
+.github
+.vscode
+migrations
+target
+.dockerignore
+.env*
+.gitignore
+.rustfmt.toml
+docker-compose.yml
+Dockerfile
+Makefile.toml

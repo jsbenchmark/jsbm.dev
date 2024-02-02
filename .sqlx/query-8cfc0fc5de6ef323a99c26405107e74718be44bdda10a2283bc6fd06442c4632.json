@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select code from shortcode where code = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "code",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "8cfc0fc5de6ef323a99c26405107e74718be44bdda10a2283bc6fd06442c4632"
+}

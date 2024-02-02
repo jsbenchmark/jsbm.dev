@@ -1,0 +1,51 @@
+[tasks.setup]
+script = '''
+    echo # installing git hooks
+    pre-commit --version || pip install pre-commit
+    pre-commit install || echo "failed to install git hooks!" 1>&2
+'''
+
+[tasks.dev]
+command = "cargo"
+args = ["run"]
+watch = true
+
+[tasks.lint]
+install_crate = "clippy"
+command = "cargo"
+args = [
+	"clippy",
+	"--tests",
+	"--examples",
+	"--all-targets",
+	"--all-features",
+	"--workspace",
+]
+
+[tasks.lint-ci]
+install_crate = "clippy"
+command = "cargo"
+args = [
+	"clippy",
+	"--tests",
+	"--examples",
+	"--all-targets",
+	"--all-features",
+	"--workspace",
+	"--",
+	"-D",
+	"warnings",
+]
+
+[tasks.format]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--all"]
+
+[tasks.fmt]
+alias = "format"
+
+[tasks.format-ci]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--all", "--", "--check"]
