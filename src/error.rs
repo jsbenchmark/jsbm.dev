@@ -1,13 +1,16 @@
+use std::error::Error as StdError;
 use std::fmt::Display;
 
+use axum::response::{Html, IntoResponse, Json, Response};
 use http::StatusCode;
 use indoc::formatdoc;
 use serde::Serialize;
 use serde_json::json;
-use worker::*;
+
+pub type BoxDynError = Box<dyn StdError + Send + Sync>;
 
 /// Creates a generic JSON response with the given status code and message.
-pub fn create_error_json<Message>(status: StatusCode, message: Message) -> worker::Result<Response>
+pub fn create_error_json<Message>(status: StatusCode, message: Message) -> Response
 where Message: Serialize {
 	let canonical_reason = status.canonical_reason().unwrap_or("Unknown");
 
@@ -16,11 +19,11 @@ where Message: Serialize {
 		"message": message
 	});
 
-	Ok(Response::from_json(&source)?.with_status(status.as_u16()))
+	(status, Json(source)).into_response()
 }
 
 /// Creates a generic HTML response with the given status code and message.
-pub fn create_html_page<Message>(status: StatusCode, message: Message) -> worker::Result<Response>
+pub fn create_html_page<Message>(status: StatusCode, message: Message) -> Response
 where Message: Display {
 	let canonical_reason = status.canonical_reason().unwrap_or("Unknown");
 
@@ -48,5 +51,5 @@ where Message: Display {
 		</html>
 	"#};
 
-	Ok(Response::from_html(source)?.with_status(status.as_u16()))
+	(status, Html(source)).into_response()
 }

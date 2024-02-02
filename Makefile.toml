@@ -1,0 +1,31 @@
+[tasks.setup]
+script = '''
+    echo # installing git hooks
+    pre-commit --version || pip install pre-commit
+    pre-commit install || echo "failed to install git hooks!" 1>&2
+'''
+
+[tasks.dev]
+command = "cargo"
+args = ["run"]
+env_files = ["./.env"]
+watch = true
+
+[tasks.lint]
+command = "cargo"
+args = [
+	"+nightly",
+	"clippy",
+	"--tests",
+	"--examples",
+	"--all-targets",
+	"--all-features",
+	"--workspace",
+]
+
+[tasks.format]
+command = "cargo"
+args = ["+nightly", "fmt", "--all"]
+
+[tasks.fmt]
+alias = "format"

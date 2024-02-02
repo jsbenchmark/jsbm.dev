@@ -1,4 +1,3 @@
--- Migration number: 0000 	 2024-01-20T01:25:05.928Z
 create table if not exists shortcode (
 	code text primary key,
 	mode int not null default 0,

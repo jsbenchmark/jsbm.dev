@@ -1,15 +1,34 @@
-use std::error::Error as StdError;
-use std::result::Result as StdResult;
+use std::env::var;
+use std::sync::Arc;
+use std::time::Duration;
 
 use serde::{Deserialize, Serialize};
-use serde_repr::{Deserialize_repr, Serialize_repr};
-use tokio_postgres::config::SslMode;
-use tokio_postgres::types::{FromSql, Type};
-use worker::postgres_tls::PassthroughTls;
-use worker::*;
+use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
+use sqlx::{ConnectOptions, PgPool};
 
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
-#[repr(u8)]
+use crate::BoxDynError;
+
+/// Creates a new connection to the Postgres database.
+pub async fn create_database() -> Result<Arc<PgPool>, BoxDynError> {
+	let database_url = var("DATABASE_URL")?;
+
+	let pool = PgPoolOptions::new()
+		.max_connections(32)
+		.min_connections(4)
+		.acquire_timeout(Duration::from_secs(8))
+		.idle_timeout(Duration::from_secs(8))
+		.max_lifetime(Duration::from_secs(120));
+
+	let mut opts: PgConnectOptions = database_url.parse()?;
+	opts = opts.log_statements(tracing::log::LevelFilter::Debug);
+
+	let db = pool.connect_with(opts).await?;
+
+	Ok(Arc::new(db))
+}
+
+#[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize, sqlx::Type)]
+#[repr(i32)]
 pub enum ShortlinkMode {
 	Benchmark = 0,
 	Repl = 1,
@@ -22,26 +41,6 @@ impl ShortlinkMode {
 			ShortlinkMode::Repl => 1,
 		}
 	}
-
-	pub fn from_i32(i: i32) -> StdResult<Self, Box<dyn StdError + Sync + Send>> {
-		match i {
-			0 => Ok(ShortlinkMode::Benchmark),
-			1 => Ok(ShortlinkMode::Repl),
-			_ => Err("invalid shortlink mode".into()),
-		}
-	}
-}
-
-impl<'a> FromSql<'a> for ShortlinkMode {
-	fn from_sql(ty: &Type, raw: &'a [u8]) -> StdResult<Self, Box<dyn StdError + Sync + Send>> {
-		let i = i32::from_sql(ty, raw)?;
-
-		ShortlinkMode::from_i32(i)
-	}
-
-	fn accepts(ty: &Type) -> bool {
-		i32::accepts(ty)
-	}
 }
 
 #[allow(dead_code)]
@@ -50,37 +49,4 @@ pub struct ShortlinkRow {
 	pub code: String,
 	pub data: String,
 	pub mode: ShortlinkMode,
-}
-
-/// Creates a new connection to the Postgres database.
-pub async fn create_database(env: &Env) -> Result<tokio_postgres::Client> {
-	let mut config = tokio_postgres::config::Config::new();
-	config.user(&env.secret("PG_USER")?.to_string());
-	config.password(&env.secret("PG_PASSWORD")?.to_string());
-
-	if env
-		.var("ENVIRONMENT")
-		.map(|e| &e.to_string() == "production")
-		.unwrap_or(false)
-	{
-		config.ssl_mode(SslMode::Require);
-	}
-
-	config.dbname(&env.secret("PG_DATABASE")?.to_string());
-
-	let socket = Socket::builder()
-		.secure_transport(SecureTransport::StartTls)
-		.connect(&env.secret("PG_HOST")?.to_string(), 5432)?;
-	let (client, connection) = config
-		.connect_raw(socket, PassthroughTls)
-		.await
-		.map_err(|e| worker::Error::RustError(format!("tokio-postgres: {e:#?}")))?;
-
-	wasm_bindgen_futures::spawn_local(async move {
-		if let Err(error) = connection.await {
-			console_error!("postgres connection error: {error:#?}");
-		}
-	});
-
-	Ok(client)
 }
