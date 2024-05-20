@@ -13,6 +13,7 @@ pub struct BenchmarkCase {
 	pub id: String,
 	pub code: String,
 	pub name: String,
+	pub r#async: Option<bool>,
 	pub dependencies: Option<Vec<Dependency>>,
 }
 
