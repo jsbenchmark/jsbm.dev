@@ -1,6 +1,6 @@
 # jsbm.dev
 
-> Benchmark storage and redirecting Cloudflare Worker for [JSBenchmark.com](https://jsbenchmark.com)
+> Benchmark storage and redirecting API for [JSBenchmark.com](https://jsbenchmark.com)
 
 ## API
 
@@ -79,32 +79,25 @@ interface ReplState {
 
 To get up-and-running in development, do the following:
 
-1. Setup Wrangler
+1. Clone `.env`
 
-I use [`Volta`](https://volta.sh) but `npm i -g` works just as well.
-
-```bash
-$ volta install wrangler # or
-$ npm i -g wrangler
-```
-
-Then, run `wrangler login` and follow the instructions.
-
-1. Clone `.dev.vars`
-
-The example file is prefixed with an underscore.
+The example file is `.env.example`.
 
 ```sh
-$ cp _.dev.vars .dev.vars
+$ cp .env.example .env
 ```
 
-1. Start postgres (and pgbouncer)
+2. Start postgres
 
-Run `docker compose up --wait` to start postgres and pgbouncer.
-Pgbouncer is used to pool connections to the database, which is required for serverless.
-The migrations are ran automatically.
+Run `docker compose up --wait` to start postgres
 
-Neon, the database provider this project recommends in production, has a native pooling option, so this is only required for development.
+3. Run migrations
+
+Install the [`sqlx-cli`]() then run `sqlx migrate run`.
+
+4. Start the server
+
+`makers dev`
 
 ## Deployment
 

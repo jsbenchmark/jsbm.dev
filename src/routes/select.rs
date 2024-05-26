@@ -1,35 +1,36 @@
+use std::sync::Arc;
+
+use axum::extract::{Path, State};
+use axum::response::{IntoResponse, Redirect};
 use http::StatusCode;
-use worker::*;
 
 use crate::error::create_html_page;
-use crate::model::{create_database, ShortlinkMode};
+use crate::model::ShortlinkMode;
+use crate::AppState;
 
-pub async fn select_shortcode(_: Request, ctx: RouteContext<()>) -> worker::Result<Response> {
-	let Some(shortcode) = ctx.param("shortcode") else {
-		return create_html_page(StatusCode::BAD_REQUEST, "No shortcode provided".to_string());
-	};
-
-	let db = create_database(&ctx.env).await?;
-	let result = match db
-		.query_opt("select data, mode from shortcode WHERE code = $1", &[shortcode])
-		.await
+#[axum::debug_handler]
+pub async fn get_code(State(state): State<Arc<AppState>>, Path(code): Path<String>) -> impl IntoResponse {
+	let result = match sqlx::query!(
+		r#"select data, mode as "mode: ShortlinkMode" from shortcode WHERE code = $1"#,
+		&code
+	)
+	.fetch_optional(&*state.db)
+	.await
 	{
 		Ok(Some(result)) => result,
-		Ok(None) => return create_html_page(StatusCode::NOT_FOUND, "Shortcode not found".to_string()),
+		Ok(None) => return create_html_page(StatusCode::NOT_FOUND, "Shortcode not found".to_string()).into_response(),
 		Err(e) => {
-			console_error!("Error querying database: {e:#?}");
-			return create_html_page(StatusCode::INTERNAL_SERVER_ERROR, "An unknown error occurred");
+			tracing::error!("Error querying database: {e:#?}");
+			return create_html_page(StatusCode::INTERNAL_SERVER_ERROR, "An unknown error occurred").into_response();
 		}
 	};
 
-	let encoded_data: &str = result.get("data");
-	let mode: ShortlinkMode = result.get("mode");
-
-	let frontend_url = ctx.env.var("FRONTEND_URL")?.to_string();
-	let url = match mode {
-		ShortlinkMode::Benchmark => Url::parse(&format!("{frontend_url}/#{}", encoded_data))?,
-		ShortlinkMode::Repl => Url::parse(&format!("{frontend_url}/repl/#{}", encoded_data))?,
+	let frontend_url = &state.frontend_url;
+	let data = &result.data;
+	let url = match result.mode {
+		ShortlinkMode::Benchmark => format!("{frontend_url}/#{data}"),
+		ShortlinkMode::Repl => format!("{frontend_url}/repl/#{data}"),
 	};
 
-	Response::redirect(url)
+	Redirect::permanent(&url).into_response()
 }

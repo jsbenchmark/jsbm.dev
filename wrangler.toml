@@ -1,9 +1,0 @@
-name = "jsbm-dev"
-main = "build/worker/shim.mjs"
-compatibility_date = "2022-10-20"
-
-[build]
-command = "cargo install -q worker-build --version 0.0.10 && worker-build --release"
-
-[vars]
-ENVIRONMENT = "production"

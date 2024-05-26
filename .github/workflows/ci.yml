@@ -1,0 +1,40 @@
+name: Format, Lint, and Build
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["**.md"]
+  pull_request:
+    paths-ignore: ["**.md"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Register Problem Matchers
+        uses: r7kamura/rust-problem-matchers@v1
+
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt,clippy
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install Cargo Make
+        uses: davidB/rust-cargo-make@v1
+
+      - name: Run Formatter
+        run: cargo +nightly fmt --all -- --check
+
+      - name: Run Clippy
+        run: cargo +nightly clippy --tests --examples --all-targets --all-features --workspace -- -D warnings
+
+      - name: Build
+        run: cargo build --release

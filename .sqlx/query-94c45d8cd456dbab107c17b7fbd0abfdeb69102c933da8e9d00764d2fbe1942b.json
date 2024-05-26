@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select data, mode as \"mode: ShortlinkMode\" from shortcode WHERE code = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "data",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "mode: ShortlinkMode",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "94c45d8cd456dbab107c17b7fbd0abfdeb69102c933da8e9d00764d2fbe1942b"
+}
