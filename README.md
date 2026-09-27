@@ -29,6 +29,9 @@ interface BenchmarkState {
   }[];
   config: {
     name: string;
+    runtime?: 'worker' | 'dom';
+    benchmarkMode?: 'quick' | 'standard' | 'extended';
+    setupHtml?: string;
     parallel: boolean;
     globalTestConfig: {
       dependencies: {
@@ -51,6 +54,8 @@ interface BenchmarkState {
 interface ReplState {
   config: {
     name: string;
+    runtime?: 'worker' | 'dom';
+    setupHtml?: string;
     test: {
       dependencies: {
         url: string;
