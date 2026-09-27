@@ -55,8 +55,8 @@ pub struct ShortlinkRow {
 /// Creates a new connection to the Postgres database.
 pub async fn create_database(env: &Env) -> Result<tokio_postgres::Client> {
 	let mut config = tokio_postgres::config::Config::new();
-	config.user(&env.secret("PG_USER")?.to_string());
-	config.password(&env.secret("PG_PASSWORD")?.to_string());
+	config.user(env.secret("PG_USER")?.to_string());
+	config.password(env.secret("PG_PASSWORD")?.to_string());
 
 	if env
 		.var("ENVIRONMENT")
@@ -66,11 +66,11 @@ pub async fn create_database(env: &Env) -> Result<tokio_postgres::Client> {
 		config.ssl_mode(SslMode::Require);
 	}
 
-	config.dbname(&env.secret("PG_DATABASE")?.to_string());
+	config.dbname(env.secret("PG_DATABASE")?.to_string());
 
 	let socket = Socket::builder()
 		.secure_transport(SecureTransport::StartTls)
-		.connect(&env.secret("PG_HOST")?.to_string(), 5432)?;
+		.connect(env.secret("PG_HOST")?.to_string(), 5432)?;
 	let (client, connection) = config
 		.connect_raw(socket, PassthroughTls)
 		.await

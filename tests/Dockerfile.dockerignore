@@ -1,0 +1,10 @@
+**
+!Cargo.toml
+!Cargo.lock
+!rust-toolchain.toml
+!wrangler.toml
+!src/
+!src/**
+!tests/
+!tests/**
+tests/.wrangler/

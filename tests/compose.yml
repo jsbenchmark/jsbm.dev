@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: jsbm_test
+      POSTGRES_PASSWORD: jsbm_test_password
+      POSTGRES_DB: jsbm_test
+    volumes:
+      - ../migrations:/docker-entrypoint-initdb.d:ro
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "jsbm_test", "-d", "jsbm_test"]
+      interval: 1s
+      timeout: 5s
+      retries: 30
+
+  tests:
+    build:
+      context: ..
+      dockerfile: tests/Dockerfile
+    environment:
+      JSBM_TEST_PG_HOST: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    init: true

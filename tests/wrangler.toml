@@ -1,0 +1,11 @@
+name = "jsbm-dev-test"
+main = "../build/index.js"
+compatibility_date = "2022-10-20"
+
+[vars]
+ENVIRONMENT = "test"
+PG_HOST = "127.0.0.1"
+PG_USER = "jsbm_test"
+PG_PASSWORD = "jsbm_test_password"
+PG_DATABASE = "jsbm_test"
+FRONTEND_URL = "https://frontend.example"

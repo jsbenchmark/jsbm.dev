@@ -3,7 +3,7 @@ use base64::Engine as _;
 use http::StatusCode;
 use serde::{Deserialize, Serialize};
 use worker::*;
-use rand::distributions::{Alphanumeric, DistString};
+use rand::distr::{Alphanumeric, SampleString};
 
 use crate::error::create_error_json;
 use crate::model::{create_database, ShortlinkMode};
@@ -17,9 +17,7 @@ enum CreateShortcodeJsonBody {
 }
 
 fn generate_code() -> String {
-	let string = Alphanumeric.sample_string(&mut rand::thread_rng(), 13);
-
-	string
+	Alphanumeric.sample_string(&mut rand::rng(), 13)
 }
 
 pub async fn create_shortcode(mut req: Request, ctx: RouteContext<()>) -> worker::Result<Response> {
@@ -39,7 +37,7 @@ pub async fn create_shortcode(mut req: Request, ctx: RouteContext<()>) -> worker
 	let data = URL_SAFE.encode(&s);
 
 	// Limit data size to 100KB.
-	if data.bytes().len() > 100_000 {
+	if data.len() > 100_000 {
 		return create_error_json(StatusCode::PAYLOAD_TOO_LARGE, "Payload too large");
 	}
 

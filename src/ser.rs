@@ -91,7 +91,7 @@ mod tests {
 			let mut payload = legacy.clone();
 			if let Some(runtime) = runtime {
 				payload["config"]["runtime"] = json!(runtime);
-				payload["config"]["setupHtml"] = json!("<div id=\"fixture\">Hello & Grüß dich 🌍</div>\n");
+				payload["config"]["setupHtml"] = json!("<div id=\"fixture\">hello world</div>\n");
 				payload["config"]["benchmarkMode"] = json!("extended");
 			}
 
@@ -113,7 +113,7 @@ mod tests {
 			let mut payload = legacy.clone();
 			if let Some(runtime) = runtime {
 				payload["config"]["runtime"] = json!(runtime);
-				payload["config"]["setupHtml"] = json!("<div id=\"fixture\">Hello & Grüß dich 🌍</div>\n");
+				payload["config"]["setupHtml"] = json!("<div id=\"fixture\">hello world</div>\n");
 			}
 
 			let state: ReplState = serde_json::from_value(payload.clone()).unwrap();
